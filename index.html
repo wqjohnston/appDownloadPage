@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="renderer" content="webkit">
+    <title>滑动的下载页</title>
+    <meta name="Keywords" content="" />
+    <meta name="Description" content="" />
+    <style type="text/css">
+        *
+        {
+            padding: 0;
+            margin: 0;
+        }
+        img
+        {
+            border: 0 none;
+        }
+        .swipe-wrap
+        {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+        .swipe
+        {
+            position: absolute;
+            width: 100%;
+        }
+        .swipe-box
+        {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .download
+        {
+            position: fixed;
+            margin: 0 auto;
+        	padding: 0px 25px 0px 25px;
+            left: 0;
+            bottom: 60px;
+            right: 0;
+            text-align: center;
+            z-index: 3;
+        }
+        #lbtn {
+    		margin-right: 10px;
+    	}
+        .next
+        {
+            position: fixed;
+            margin: 0 auto;
+            left: 0;
+            bottom: 10px;
+            right: 0;
+            text-align: center;
+            z-index: 3;
+            
+        }
+        .next img
+        {
+        	width: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="swipe-wrap" id="slip">
+        <article class="swipe">
+			<div class="swipe-box">    
+				<img id="img1" src="img/p1.png">
+			</div>
+			<div class="swipe-box">      
+				<img id="img3" src="img/p2.png">
+			</div>
+			<div class="swipe-box">      
+				<img id="img4" src="img/p3.png">
+			</div>
+			<div class="swipe-box">      
+				<img id="img5" src="img/p4.png">
+			</div>
+		</article>
+	</div>
+	<div class="download">
+		<a href="#">
+			<img id="lbtn" src="img/android.png" />
+		</a>
+		<a href="#">
+			<img id="rbtn" src="img/ios.png" />
+		</a>
+	</div>
+	<div class="next">
+		<img src="img/next.png" />
+	</div>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/slip.min.js"></script>
+	<script type="text/javascript">
+	    $(function () {
+	        var winWidth = $(window).width();
+	        var winHeight = $(window).height();
+	        // alert( winWidth + ' ' + winHeight)
+	        
+	        $("#img1").width(winWidth);
+	        $("#img3").width(winWidth);
+	        $("#img4").width(winWidth);
+	        $("#img5").width(winWidth);
+
+
+	        // 设置下载按钮样式
+	        $("#lbtn").css("width", (winWidth-70)/2);
+	        $("#rbtn").css("width", (winWidth-70)/2);
+
+
+	        var container = document.getElementById('slip');
+	        var pages = document.querySelectorAll('.swipe-box');
+	        var slip = Slip(container, 'y').webapp(pages);
+
+	        // 此处 判断是否是最后一张 如果是隐藏向下箭头图标
+	        slip.end(function() {
+				if (this.page === 3) {
+					$(".next").css("display","none");
+				}else{
+					$(".next").css("display","");
+				}
+	        });
+
+			function is_weixin() {
+			    var ua = navigator.userAgent.toLowerCase();
+			    if (ua.match(/MicroMessenger/i) == "micromessenger") {
+			        return true;
+			    } else {
+			        return false;
+			    }
+			}
+			function is_mobileQQ() {
+				var ua = navigator.userAgent.toLowerCase();
+				if (ua.match(/\sQQ/i) == " qq") {
+					return true;
+				} else {
+					return false;
+				}
+			}
+			var isWeixin = is_weixin();
+			var isMobileQQ = is_mobileQQ();
+			var weixinTip = $('<div id="weixinTip"><p><img src="img/live_weixin.png" alt="微信打开"/></p></div>');
+			// alert(isWeixin)
+			// alert(isMobileQQ)
+			
+			if(isWeixin || isMobileQQ){
+				$("#slip").before(weixinTip);
+			}
+			$("#weixinTip").css({
+				"position":"fixed",
+				"left":"0",
+				"top":"0",
+				"height":winHeight,
+				"width":"100%",
+				"z-index":"1000",
+				"background-color":"rgba(0,0,0,0.8)",
+				"filter":"alpha(opacity=80)",
+			});
+			$("#weixinTip p").css({
+				"text-align":"center",
+				"margin-top":"10%",
+				// "padding-left":"5%",
+				// "padding-right":"5%"
+			});
+			$("#weixinTip p img").css({
+				"width":winWidth/3*2,
+				"margin-right":"-70px",
+			});
+	    });
+
+	</script>
+</body>
+</html>
